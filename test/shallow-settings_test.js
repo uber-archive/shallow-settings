@@ -96,3 +96,35 @@ describe('A set of lazy loaded `shallow-settings`', function () {
     });
   });
 });
+
+describe('A set of asynchronous settings', function () {
+  before(function registerAsyncSettings () {
+    var that = this;
+    this.settings = new Settings({
+      common: {},
+      'async-loaded': {
+        async: Settings.lazy(function (cb) {
+          setTimeout(function () {
+            cb(null, 'hello');
+          }, 100);
+        })
+      }
+    });
+  });
+
+  describe('when retrieved', function () {
+    before(function loadAsyncSettings (done) {
+      this.settings.getSettings({env: 'async-loaded'}, function (err, actualSettings) {
+        this.actualSettings = actualSettings;
+        done(err);
+      });
+    });
+
+    it('retrieves the async data', function () {
+      expect(this.actualSettings).to.deep.equal({
+        ENV: 'async-loaded',
+        async: 'hello'
+      });
+    });
+  });
+});
