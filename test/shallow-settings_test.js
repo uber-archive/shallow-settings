@@ -103,6 +103,10 @@ describe('A set of asynchronous settings', function () {
     this.settings = new Settings({
       common: {},
       'async-loaded': {
+        normal: '123',
+        sync: Settings.lazy(function () {
+          return 'hey';
+        }),
         async: Settings.lazy(function (cb) {
           setTimeout(function () {
             cb(null, 'hello');
@@ -124,6 +128,8 @@ describe('A set of asynchronous settings', function () {
     it('retrieves the async data', function () {
       expect(this.actualSettings).to.deep.equal({
         ENV: 'async-loaded',
+        normal: '123',
+        sync: 'hey',
         async: 'hello'
       });
     });
