@@ -114,8 +114,9 @@ describe('A set of asynchronous settings', function () {
 
   describe('when retrieved', function () {
     before(function loadAsyncSettings (done) {
+      var that = this;
       this.settings.getSettings({env: 'async-loaded'}, function (err, actualSettings) {
-        this.actualSettings = actualSettings;
+        that.actualSettings = actualSettings;
         done(err);
       });
     });
